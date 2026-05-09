@@ -38,29 +38,63 @@ void display(Node* head)
 
 Node* sortedMerge(Node* a, Node* b)
 {
-    // TODO:
-    // Merge two sorted linked lists
+    
+    if (a == nullptr) return b;
+    if (b == nullptr) return a;
+
+    Node* result = nullptr;
+
+    if (a->data <= b->data) {
+        result = a;
+        result->next = sortedMerge(a->next, b);
+    }
+    else {
+        result = b;
+        result->next = sortedMerge(a, b->next);
+    }
+    return result;
 }
 
 void splitList(Node* source, Node*& front, Node*& back)
 {
-    // TODO:
-    // Use slow/fast pointer method
-    // Split list into two halves
+    Node* fast;
+    Node* slow;
+    slow = source;
+    fast = source->next;
+
+
+    while (fast != nullptr) {
+        fast = fast->next;
+        if (fast != nullptr) {
+            slow = slow->next;
+            fast = fast->next;
+        }
+    }
+
+
+    front = source;
+    back = slow->next;
+    slow->next = nullptr;
+
 }
 
 void mergeSort(Node*& head)
 {
-    if (head == NULL || head->next == NULL)
+    // Base case: length 0 or 1
+    if (head == nullptr || head->next == nullptr)
         return;
 
     Node* a;
     Node* b;
 
-    // TODO:
-    // Split list
-    // Recursively sort both halves
-    // Merge sorted lists
+    splitList(head, a, b);
+
+
+    mergeSort(a);
+    mergeSort(b);
+
+
+    head = sortedMerge(a, b);
 }
 
 int main()
